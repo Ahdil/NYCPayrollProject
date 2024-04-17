@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline_nyc_payroll_aggregation",
 	"properties": {
 		"activities": [
 			{
