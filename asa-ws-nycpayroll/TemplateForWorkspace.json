@@ -130,7 +130,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "CREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = 'nycpayroll_2020.csv',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n",
+					"query": "-- DROP EXTERNAL TABLE dbo.NYC_Payroll_Summary\n\nCREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = '/',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n\n\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -170,7 +170,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat')\nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\nWITH (FORMAT_TYPE    = DELIMITEDTEXT, \n      FORMAT_OPTIONS (FIELD_TERMINATOR = ',', USE_TYPE_DEFAULT = FALSE))\nGO      ",
+					"query": "-- DROP EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat')\nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\nWITH (FORMAT_TYPE    = DELIMITEDTEXT, \n      FORMAT_OPTIONS (FIELD_TERMINATOR = ',', USE_TYPE_DEFAULT = FALSE, FIRST_ROW = 2))\nGO      ",
 					"metadata": {
 						"language": "sql"
 					},
