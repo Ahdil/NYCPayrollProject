@@ -1,5 +1,11 @@
 {
 	"name": "adf-udacity-nycpayroll",
+	"properties": {
+		"globalConfigurations": {
+			"factoryStagingLSReferenceName": "ls_adlsasanycpayroll",
+			"factoryStagingLSType": "LinkedServiceReference"
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
