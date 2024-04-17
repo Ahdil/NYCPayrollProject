@@ -19,7 +19,22 @@
 					"name": "source2020Payrollsql"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_NYC_Payroll_Summary_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSummarysql"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_destination_nycpayroll_Summary_csv",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSummarycsv"
+				}
+			],
 			"transformations": [
 				{
 					"name": "union2021and2020"
@@ -28,10 +43,22 @@
 					"name": "select2021AgencyNameFiscalYearAmountsCols"
 				},
 				{
-					"name": "select1"
+					"name": "select2020AgencyNameFiscalYearAmountsCols"
+				},
+				{
+					"name": "filterYearsRange"
+				},
+				{
+					"name": "derivedTotalPaidCol"
+				},
+				{
+					"name": "aggregateSalariesByYearAndAgency"
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     dataflow_param_fiscalyear as integer (2021)",
+				"}",
 				"source(output(",
 				"          FiscalYear as integer,",
 				"          PayrollNumber as integer,",
@@ -82,7 +109,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source2020Payrollsql",
-				"select2021AgencyNameFiscalYearAmountsCols, select1 union(byName: true,",
+				"select2021AgencyNameFiscalYearAmountsCols, select2020AgencyNameFiscalYearAmountsCols union(byName: true,",
 				"     partitionBy('roundRobin', 2))~> union2021and2020",
 				"source2021Payrollsql select(mapColumn(",
 				"          FiscalYear,",
@@ -101,7 +128,51 @@
 				"          TotalOtherPay",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select2020AgencyNameFiscalYearAmountsCols",
+				"union2021and2020 filter(FiscalYear>=$dataflow_param_fiscalyear) ~> filterYearsRange",
+				"filterYearsRange derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> derivedTotalPaidCol",
+				"derivedTotalPaidCol aggregate(groupBy(AgencyName,",
+				"          FiscalYear),",
+				"     TotalPaid = sum(TotalPaid)) ~> aggregateSalariesByYearAndAgency",
+				"aggregateSalariesByYearAndAgency sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as integer,",
+				"          AgencyName as string,",
+				"          TotalPaid as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          FiscalYear,",
+				"          AgencyName,",
+				"          TotalPaid",
+				"     )) ~> sinkSummarysql",
+				"aggregateSalariesByYearAndAgency sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FiscalYear as string,",
+				"          AgencyName as string,",
+				"          TotalPaid as string",
+				"     ),",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          FiscalYear,",
+				"          AgencyName,",
+				"          TotalPaid",
+				"     )) ~> sinkSummarycsv"
 			]
 		}
 	}
