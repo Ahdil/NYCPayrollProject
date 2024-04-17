@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-udacity-nycpayroll"
 		},
+		"ls_adlsasanycpayroll_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adlsasanycpayroll'"
+		},
 		"ls_adlsnycpayrollahdilpo_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adlsnycpayrollahdilpo'"
@@ -14,6 +18,10 @@
 		"ls_sql_srv_nycpayroll_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_sql_srv_nycpayroll'"
+		},
+		"ls_adlsasanycpayroll_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsasanycpayroll.dfs.core.windows.net/"
 		},
 		"ls_adlsnycpayrollahdilpo_properties_typeProperties_url": {
 			"type": "string",
@@ -46,11 +54,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ls_adlsasanycpayroll_accountKey": {
+						"value": "[parameters('ls_adlsasanycpayroll_accountKey')]"
+					},
 					"ls_adlsnycpayrollahdilpo_accountKey": {
 						"value": "[parameters('ls_adlsnycpayrollahdilpo_accountKey')]"
 					},
 					"ls_sql_srv_nycpayroll_connectionString": {
 						"value": "[parameters('ls_sql_srv_nycpayroll_connectionString')]"
+					},
+					"ls_adlsasanycpayroll_properties_typeProperties_url": {
+						"value": "[parameters('ls_adlsasanycpayroll_properties_typeProperties_url')]"
 					},
 					"ls_adlsnycpayrollahdilpo_properties_typeProperties_url": {
 						"value": "[parameters('ls_adlsnycpayrollahdilpo_properties_typeProperties_url')]"
