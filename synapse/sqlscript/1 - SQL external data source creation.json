@@ -1,5 +1,5 @@
 {
-	"name": "SQL external data source creation",
+	"name": "1 - SQL external data source creation",
 	"properties": {
 		"content": {
 			"query": "IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://dirstaging@adlsnycpayrollahdilpo.dfs.core.windows.net' \n\t)\nGO\n",

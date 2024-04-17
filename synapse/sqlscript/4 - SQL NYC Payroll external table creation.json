@@ -1,5 +1,5 @@
 {
-	"name": "SQL NYC Payroll external table creation",
+	"name": "4 - SQL NYC Payroll external table creation",
 	"properties": {
 		"content": {
 			"query": "-- DROP EXTERNAL TABLE dbo.NYC_Payroll_Summary\n\nCREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = '/',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n\n\n",
