@@ -1,0 +1,17 @@
+{
+	"name": "SQL file format creation",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat')\nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\nWITH (FORMAT_TYPE    = DELIMITEDTEXT, \n      FORMAT_OPTIONS (FIELD_TERMINATOR = ',', USE_TYPE_DEFAULT = FALSE))\nGO      ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
