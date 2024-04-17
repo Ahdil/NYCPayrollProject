@@ -12,9 +12,17 @@
 			"metadata": "Secure string for 'connectionString' of 'asa-ws-nycpayroll-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asa-ws-nycpayroll.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
+		"ls_adlsnycpayrollahdilpo_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adlsnycpayrollahdilpo'"
+		},
 		"asa-ws-nycpayroll-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsasanycpayroll.dfs.core.windows.net"
+		},
+		"ls_adlsnycpayrollahdilpo_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsnycpayrollahdilpo.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
@@ -65,6 +73,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/ls_adlsnycpayrollahdilpo')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_adlsnycpayrollahdilpo_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_adlsnycpayrollahdilpo_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
@@ -94,6 +125,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL external data source creation')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://dirstaging@adlsnycpayrollahdilpo.dfs.core.windows.net' \n\t)\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SQL file format creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -114,7 +165,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL udacity DB Creation')]",
+			"name": "[concat(parameters('workspaceName'), '/SQL udacity DB creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
