@@ -449,75 +449,11 @@
 						"type": "String"
 					},
 					{
-						"name": "PayrollNumber",
-						"type": "String"
-					},
-					{
-						"name": "AgencyCode",
-						"type": "String"
-					},
-					{
 						"name": "AgencyName",
 						"type": "String"
 					},
 					{
-						"name": "EmployeeID",
-						"type": "String"
-					},
-					{
-						"name": "LastName",
-						"type": "String"
-					},
-					{
-						"name": "FirstName",
-						"type": "String"
-					},
-					{
-						"name": "AgencyStartDate",
-						"type": "String"
-					},
-					{
-						"name": "WorkLocationBorough",
-						"type": "String"
-					},
-					{
-						"name": "TitleCode",
-						"type": "String"
-					},
-					{
-						"name": "TitleDescription",
-						"type": "String"
-					},
-					{
-						"name": "LeaveStatusasofJune30",
-						"type": "String"
-					},
-					{
-						"name": "BaseSalary",
-						"type": "String"
-					},
-					{
-						"name": "PayBasis",
-						"type": "String"
-					},
-					{
-						"name": "RegularHours",
-						"type": "String"
-					},
-					{
-						"name": "RegularGrossPaid",
-						"type": "String"
-					},
-					{
-						"name": "OTHours",
-						"type": "String"
-					},
-					{
-						"name": "TotalOTPaid",
-						"type": "String"
-					},
-					{
-						"name": "TotalOtherPay",
+						"name": "TotalPaid",
 						"type": "String"
 					}
 				]
@@ -849,6 +785,193 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_adlsnycpayrollahdilpo')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow summary')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_NYC_Payroll_Data_2021_sql",
+								"type": "DatasetReference"
+							},
+							"name": "source2021Payrollsql"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_NYC_Payroll_Data_2020_sql",
+								"type": "DatasetReference"
+							},
+							"name": "source2020Payrollsql"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_NYC_Payroll_Summary_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkSummarysql"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_destination_nycpayroll_Summary_csv",
+								"type": "DatasetReference"
+							},
+							"name": "sinkSummarycsv"
+						}
+					],
+					"transformations": [
+						{
+							"name": "union2021and2020"
+						},
+						{
+							"name": "select2021AgencyNameFiscalYearAmountsCols"
+						},
+						{
+							"name": "select2020AgencyNameFiscalYearAmountsCols"
+						},
+						{
+							"name": "filterYearsRange"
+						},
+						{
+							"name": "derivedTotalPaidCol"
+						},
+						{
+							"name": "aggregateSalariesByYearAndAgency"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     dataflow_param_fiscalyear as integer (2021)",
+						"}",
+						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyCode as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2021Payrollsql",
+						"source(output(",
+						"          FiscalYear as integer,",
+						"          PayrollNumber as integer,",
+						"          AgencyID as string,",
+						"          AgencyName as string,",
+						"          EmployeeID as string,",
+						"          LastName as string,",
+						"          FirstName as string,",
+						"          AgencyStartDate as date,",
+						"          WorkLocationBorough as string,",
+						"          TitleCode as string,",
+						"          TitleDescription as string,",
+						"          LeaveStatusasofJune30 as string,",
+						"          BaseSalary as double,",
+						"          PayBasis as string,",
+						"          RegularHours as double,",
+						"          RegularGrossPaid as double,",
+						"          OTHours as double,",
+						"          TotalOTPaid as double,",
+						"          TotalOtherPay as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2020Payrollsql",
+						"select2021AgencyNameFiscalYearAmountsCols, select2020AgencyNameFiscalYearAmountsCols union(byName: true,",
+						"     partitionBy('roundRobin', 2))~> union2021and2020",
+						"source2021Payrollsql select(mapColumn(",
+						"          FiscalYear,",
+						"          AgencyName,",
+						"          RegularGrossPaid,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2021AgencyNameFiscalYearAmountsCols",
+						"source2020Payrollsql select(mapColumn(",
+						"          FiscalYear,",
+						"          AgencyName,",
+						"          RegularGrossPaid,",
+						"          TotalOTPaid,",
+						"          TotalOtherPay",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2020AgencyNameFiscalYearAmountsCols",
+						"union2021and2020 filter(FiscalYear>=$dataflow_param_fiscalyear) ~> filterYearsRange",
+						"filterYearsRange derive(TotalPaid = RegularGrossPaid+TotalOTPaid+TotalOtherPay) ~> derivedTotalPaidCol",
+						"derivedTotalPaidCol aggregate(groupBy(AgencyName,",
+						"          FiscalYear),",
+						"     TotalPaid = sum(TotalPaid)) ~> aggregateSalariesByYearAndAgency",
+						"aggregateSalariesByYearAndAgency sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as integer,",
+						"          AgencyName as string,",
+						"          TotalPaid as double",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          AgencyName,",
+						"          TotalPaid",
+						"     )) ~> sinkSummarysql",
+						"aggregateSalariesByYearAndAgency sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FiscalYear as string,",
+						"          AgencyName as string,",
+						"          TotalPaid as string",
+						"     ),",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          FiscalYear,",
+						"          AgencyName,",
+						"          TotalPaid",
+						"     )) ~> sinkSummarycsv"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_NYC_Payroll_Data_2021_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_NYC_Payroll_Data_2020_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_NYC_Payroll_Summary_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_destination_nycpayroll_Summary_csv')]"
 			]
 		},
 		{
@@ -1198,67 +1321,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_nycpayroll_EmpMaster_csv')]",
 				"[concat(variables('factoryId'), '/datasets/ds_NYC_Payroll_EMP_MD_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/df_TitleMaster_csv_to_sql')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "ds_nycpayroll_TitleMaster_csv",
-								"type": "DatasetReference"
-							},
-							"name": "sourceTitlecsv"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ds_NYC_Payroll_TITLE_MD_sql",
-								"type": "DatasetReference"
-							},
-							"name": "sinkTitlesql"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> sourceTitlecsv",
-						"sourceTitlecsv sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          TitleCode as string,",
-						"          TitleDescription as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          TitleCode,",
-						"          TitleDescription",
-						"     )) ~> sinkTitlesql"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_nycpayroll_TitleMaster_csv')]",
-				"[concat(variables('factoryId'), '/datasets/ds_NYC_Payroll_TITLE_MD_sql')]"
 			]
 		}
 	]
