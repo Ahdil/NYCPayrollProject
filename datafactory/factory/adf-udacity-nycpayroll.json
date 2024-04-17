@@ -1,0 +1,9 @@
+{
+	"name": "adf-udacity-nycpayroll",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4c6b958b-bc72-4676-8f56-132eb083e2a4",
+		"tenantId": "f958e84a-92b8-439f-a62d-4f45996b6d07"
+	}
+}
