@@ -125,17 +125,17 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL NYC Payroll external table creation')]",
+			"name": "[concat(parameters('workspaceName'), '/0 - SQL udacity DB creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- DROP EXTERNAL TABLE dbo.NYC_Payroll_Summary\n\nCREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = '/',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n\n\n",
+					"query": "CREATE DATABASE udacity",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "udacity",
+						"databaseName": "master",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -145,7 +145,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL external data source creation')]",
+			"name": "[concat(parameters('workspaceName'), '/1 - SQL external data source creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -165,7 +165,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL file format creation')]",
+			"name": "[concat(parameters('workspaceName'), '/2 - SQL file format creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -185,22 +185,40 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL udacity DB creation')]",
+			"name": "[concat(parameters('workspaceName'), '/4 - SQL NYC Payroll external table creation')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "CREATE DATABASE udacity",
+					"query": "-- DROP EXTERNAL TABLE dbo.NYC_Payroll_Summary\n\nCREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = '/',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n\n\n",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "udacity",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
 				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [FiscalYear]\n,[AgencyName]\n,[TotalPaid]\n FROM [dbo].[NYC_Payroll_Summary]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					}
+				}
 			},
 			"dependsOn": []
 		}
