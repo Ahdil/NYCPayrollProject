@@ -1,5 +1,5 @@
 {
-	"name": "SQL udacity DB Creation",
+	"name": "SQL udacity DB creation",
 	"properties": {
 		"content": {
 			"query": "CREATE DATABASE udacity",
