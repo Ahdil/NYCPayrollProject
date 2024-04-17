@@ -3,7 +3,8 @@
 	"properties": {
 		"globalConfigurations": {
 			"factoryStagingLSReferenceName": "ls_adlsasanycpayroll",
-			"factoryStagingLSType": "LinkedServiceReference"
+			"factoryStagingLSType": "LinkedServiceReference",
+			"factoryStagingFolderPath": "staging"
 		}
 	},
 	"location": "eastus",
