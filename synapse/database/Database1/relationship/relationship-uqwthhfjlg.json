@@ -1,0 +1,26 @@
+{
+	"name": "relationship-uqwthhfjlg",
+	"properties": {
+		"Name": "relationship-uqwthhfjlg",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database1"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "LegalEntityBusinessMetricPartyRelationshipType",
+		"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "LegalEntityBusinessMetricPartyRelationshipTypeId",
+				"ToColumnName": "LegalEntityBusinessMetricPartyRelationshipTypeId"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\",\"toAttribute\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

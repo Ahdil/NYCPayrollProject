@@ -1,0 +1,26 @@
+{
+	"name": "relationship-puugoyuulm",
+	"properties": {
+		"Name": "relationship-puugoyuulm",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database1"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "LegalEntityBusinessMetric",
+		"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "LegalEntityId",
+				"ToColumnName": "LegalEntityId"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"LegalEntityId\",\"toAttribute\":\"LegalEntityId\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

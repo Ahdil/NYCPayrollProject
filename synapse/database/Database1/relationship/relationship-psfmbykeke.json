@@ -1,0 +1,26 @@
+{
+	"name": "relationship-psfmbykeke",
+	"properties": {
+		"Name": "relationship-psfmbykeke",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database1"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "LegalEntityBusinessMetric",
+		"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "PeriodEndDate",
+				"ToColumnName": "PeriodEndDate"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"PeriodEndDate\",\"toAttribute\":\"PeriodEndDate\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}

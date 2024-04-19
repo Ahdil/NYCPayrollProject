@@ -1,0 +1,26 @@
+{
+	"name": "relationship-tmlyfbsghy",
+	"properties": {
+		"Name": "relationship-tmlyfbsghy",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "Database1"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "LegalEntityBusinessMetric",
+		"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "PeriodStartDate",
+				"ToColumnName": "PeriodStartDate"
+			}
+		],
+		"RelationshipType": 0,
+		"Properties": {
+			"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"PeriodStartDate\",\"toAttribute\":\"PeriodStartDate\"}]}}"
+		}
+	},
+	"type": "RELATIONSHIP"
+}
