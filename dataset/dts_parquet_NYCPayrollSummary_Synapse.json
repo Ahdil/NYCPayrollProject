@@ -1,0 +1,21 @@
+{
+	"name": "dts_parquet_NYCPayrollSummary_Synapse",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsasawsudacity_nycparoll",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "*.parquet",
+				"fileSystem": "nycpayroll"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

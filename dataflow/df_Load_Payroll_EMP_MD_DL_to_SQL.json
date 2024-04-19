@@ -1,0 +1,58 @@
+{
+	"name": "df_Load_Payroll_EMP_MD_DL_to_SQL",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dts_csv_empmaster",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedlEMPdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dts_sql_NYCPayrollEMPMD",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqlEMPdata"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcedlEMPdata",
+				"sourcedlEMPdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EmployeeID as string,",
+				"          LastName as string,",
+				"          FirstName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          EmployeeID,",
+				"          LastName,",
+				"          FirstName",
+				"     )) ~> sinksqlEMPdata"
+			]
+		}
+	}
+}
