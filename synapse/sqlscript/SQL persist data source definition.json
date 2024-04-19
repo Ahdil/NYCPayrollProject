@@ -1,0 +1,17 @@
+{
+	"name": "SQL persist data source definition",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'nycpayroll_adlsasawsudacity_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [nycpayroll_adlsasawsudacity_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net' \n\t)\nGO\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "udacity",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

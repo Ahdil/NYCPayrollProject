@@ -1,0 +1,17 @@
+{
+	"name": "SQL File Format Definition",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat] \nWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\nFORMAT_OPTIONS (\nFIELD_TERMINATOR = ',',\nUSE_TYPE_DEFAULT = FALSE\n))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \nWITH ( FORMAT_TYPE = PARQUET)\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "udacity",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
