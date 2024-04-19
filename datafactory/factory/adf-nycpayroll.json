@@ -1,0 +1,16 @@
+{
+	"name": "adf-nycpayroll",
+	"properties": {
+		"globalConfigurations": {
+			"factoryStagingLSReferenceName": "ls_adlsnycpayrollahdilp",
+			"factoryStagingLSType": "LinkedServiceReference",
+			"factoryStagingFolderPath": "dirstaging"
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e356573d-a459-45bf-8f6a-eb305defd852",
+		"tenantId": "f39bccde-ef8a-4422-ad48-c230182404bf"
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"name": "df_Load_Payroll_TITLE_MD_DL_to_SQL",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dts_csv_titlemaster",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedlTITLEdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dts_sql_NYCPayrollTITLEMD",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqlTITLEdata"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcedlTITLEdata",
+				"sourcedlTITLEdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TitleCode,",
+				"          TitleDescription",
+				"     )) ~> sinksqlTITLEdata"
+			]
+		}
+	}
+}

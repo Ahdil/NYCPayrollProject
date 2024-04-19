@@ -1,0 +1,55 @@
+{
+	"name": "df_Load_Payroll_AGENCY_MD_DL_to_SQL",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dts_csv_agencymaster",
+						"type": "DatasetReference"
+					},
+					"name": "sourcedlAGENCYdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dts_sql_NYCPayrollAGENCYMD",
+						"type": "DatasetReference"
+					},
+					"name": "sinksqlAGENCYdata"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcedlAGENCYdata",
+				"sourcedlAGENCYdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          AgencyID,",
+				"          AgencyName",
+				"     )) ~> sinksqlAGENCYdata"
+			]
+		}
+	}
+}
