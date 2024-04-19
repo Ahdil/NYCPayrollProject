@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "asaws-udacity"
+		},
+		"asa-ws-nycpayroll-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asa-ws-nycpayroll.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"asaws-udacity-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asaws-udacity.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"ls_adlsnycpayrollahdilp_connectionString": {
+			"value": ""
+		},
+		"ls_adlsnycpayrollahdilpo_accountKey": {
+			"value": ""
+		},
+		"asa-ws-nycpayroll-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://adlsasanycpayroll.dfs.core.windows.net"
+		},
+		"asaws-udacity-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://adlsasawsudacity.dfs.core.windows.net"
+		},
+		"ls_adlsnycpayrollahdilpo_properties_typeProperties_url": {
+			"value": "https://adlsnycpayrollahdilpo.dfs.core.windows.net/"
+		}
+	}
+}

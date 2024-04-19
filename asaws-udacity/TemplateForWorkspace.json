@@ -1,0 +1,1931 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "asaws-udacity"
+		},
+		"asa-ws-nycpayroll-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'asa-ws-nycpayroll-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asa-ws-nycpayroll.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"asaws-udacity-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'asaws-udacity-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asaws-udacity.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"ls_adlsnycpayrollahdilp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_adlsnycpayrollahdilp'"
+		},
+		"ls_adlsnycpayrollahdilpo_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adlsnycpayrollahdilpo'"
+		},
+		"asa-ws-nycpayroll-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsasanycpayroll.dfs.core.windows.net"
+		},
+		"asaws-udacity-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsasawsudacity.dfs.core.windows.net"
+		},
+		"ls_adlsnycpayrollahdilpo_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsnycpayrollahdilpo.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/asa-ws-nycpayroll-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('asa-ws-nycpayroll-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/asa-ws-nycpayroll-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('asa-ws-nycpayroll-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/asaws-udacity-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('asaws-udacity-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/asaws-udacity-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('asaws-udacity-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ls_adlsnycpayrollahdilp')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_adlsnycpayrollahdilp_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ls_adlsnycpayrollahdilpo')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_adlsnycpayrollahdilpo_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_adlsnycpayrollahdilpo_accountKey')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/0 - SQL udacity DB creation')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE DATABASE udacity",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/1 - SQL external data source creation')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://dirstaging@adlsnycpayrollahdilpo.dfs.core.windows.net' \n\t)\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/2 - SQL file format creation')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- DROP EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat')\nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat]\nWITH (FORMAT_TYPE    = DELIMITEDTEXT, \n      FORMAT_OPTIONS (FIELD_TERMINATOR = ',', USE_TYPE_DEFAULT = FALSE, FIRST_ROW = 2))\nGO      ",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/4 - SQL NYC Payroll external table creation')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- DROP EXTERNAL TABLE dbo.NYC_Payroll_Summary\n\nCREATE EXTERNAL TABLE dbo.NYC_Payroll_Summary (\n\t[FiscalYear] [int]         NULL,\n\t[AgencyName] [varchar](50) NULL,\n\t[TotalPaid]  [float]       NULL\n\t)\n\tWITH (\n\tLOCATION = '/',\n\tDATA_SOURCE = [dirstaging_adlsnycpayrollahdilpo_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDelimitedTextFormat]\n\t)\nGO\n\n\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL File Format Definition')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDelimitedTextFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseDelimitedTextFormat] \nWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\nFORMAT_OPTIONS (\nFIELD_TERMINATOR = ',',\nUSE_TYPE_DEFAULT = FALSE\n))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \nCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \nWITH ( FORMAT_TYPE = PARQUET)\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL create external table NYC_Payroll_Summary')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "DROP EXTERNAL TABLE [dbo].[NYC_Payroll_Summary] \n\nCREATE EXTERNAL TABLE [dbo].[NYC_Payroll_Summary](\n[FiscalYear] [int] NULL,\n[AgencyName] [varchar](50) NULL,\n[TotalPaid] [float] NULL\n)\nWITH (\nLOCATION = '/',\nDATA_SOURCE = [nycpayroll_adlsasawsudacity_dfs_core_windows_net],\nFILE_FORMAT = [SynapseParquetFormat]\n)\nGO\n\nSELECT * FROM [dbo].[NYC_Payroll_Summary]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL persist data source definition')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'nycpayroll_adlsasawsudacity_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [nycpayroll_adlsasawsudacity_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net' \n\t)\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "udacity",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Database1')]",
+			"type": "Microsoft.Synapse/workspaces/databases",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"Ddls": [
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "Database1",
+							"EntityType": "DATABASE",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"Properties": {
+								"IsSyMSCDMDatabase": true,
+								"DerivedModelDBInfo": "{\"ModelDirectives\":{\"BaseModel\":{\"Name\":\"Retail\",\"Version\":\"1.3.0\"}}}"
+							},
+							"Source": {
+								"Provider": "ADLS",
+								"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1",
+								"Properties": {
+									"FormatType": "csv",
+									"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage"
+								}
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "BenefitCriteriaType",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "Benefit Criteria Type is a means of classifying, grouping or categorizing specific Benefit Criteria at a higher level for analysis and presentation.\n\nThe Benefit Criteria is the specific variable or value that may be linked to a Market Segment.\n\nThe Benefit Type is the larger category to which the Benefit Criteria belongs.\n\nThe following are examples:\n\nBenefit Criteria:  Long Term Appreciation\nBenefit Type:  Investment Objective\n\nBenefit Criteria:  Retirement Savings\nBenefit Type:  Investment Objective",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "BenefitCriteriaTypeId",
+										"Description": "The unique identifier of a Benefit Criteria Type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BenefitCriteriaTypeName",
+										"Description": "The name of the Benefit Criteria Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeName"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BenefitCriteriaTypeDescription",
+										"Description": "The description of the Benefit Criteria Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BenefitCriteriaType.cdm.json/BenefitCriteriaType",
+											"Name": "BenefitCriteriaTypeDescription"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BenefitCriteriaType",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BenefitCriteriaType",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"BenefitCriteriaTypeId\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeId\"},\"BenefitCriteriaTypeName\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeName\"},\"BenefitCriteriaTypeDescription\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeDescription\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"BenefitCriteriaType\",\"path\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\"},\"description\":\"Benefit Criteria Type is a means of classifying, grouping or categorizing specific Benefit Criteria at a higher level for analysis and presentation.\\n\\nThe Benefit Criteria is the specific variable or value that may be linked to a Market Segment.\\n\\nThe Benefit Type is the larger category to which the Benefit Criteria belongs.\\n\\nThe following are examples:\\n\\nBenefit Criteria:  Long Term Appreciation\\nBenefit Type:  Investment Objective\\n\\nBenefit Criteria:  Retirement Savings\\nBenefit Type:  Investment Objective\",\"primaryKey\":[\"BenefitCriteriaTypeId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Benefit Criteria Type.\",\"isNullable\":false,\"name\":\"BenefitCriteriaTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeName\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The name of the Benefit Criteria Type.\",\"isNullable\":true,\"name\":\"BenefitCriteriaTypeName\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BenefitCriteriaType.cdm.json/BenefitCriteriaType\",\"name\":\"BenefitCriteriaTypeDescription\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The description of the Benefit Criteria Type.\",\"isNullable\":true,\"name\":\"BenefitCriteriaTypeDescription\"}]}}}",
+								"Description": "Benefit Criteria Type is a means of classifying, grouping or categorizing specific Benefit Criteria at a higher level for analysis and presentation.\n\nThe Benefit Criteria is the specific variable or value that may be linked to a Market Segment.\n\nThe Benefit Type is the larger category to which the Benefit Criteria belongs.\n\nThe following are examples:\n\nBenefit Criteria:  Long Term Appreciation\nBenefit Type:  Investment Objective\n\nBenefit Criteria:  Retirement Savings\nBenefit Type:  Investment Objective",
+								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#E3008C\"}",
+								"PrimaryKeys": "BenefitCriteriaTypeId",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "BusinessMetric",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "A financial or performance metric or measurement that provides information about the performance or financial status of the organization, corporation or business unit.",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "BusinessMetricId",
+										"Description": "The unique identifier of a business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "BusinessMetricId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricName",
+										"Description": "The name of a Business Metric.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "BusinessMetricName"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricDescription",
+										"Description": "The description of a Business Metric.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "BusinessMetricDescription"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricAlgorithm",
+										"Description": "The algorithm used to calculate a Business Metric.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "BusinessMetricAlgorithm"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricTypeId",
+										"Description": "The unique identifier of a Business Metric Type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "BusinessMetricTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "KeyPerformanceIndicator",
+										"Description": "Indicates whether the metric is always considered to be a key performance indicator.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetric.cdm.json/BusinessMetric",
+											"Name": "KeyPerformanceIndicator"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BusinessMetric",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BusinessMetric",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"BusinessMetricId\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricId\"},\"BusinessMetricName\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricName\"},\"BusinessMetricDescription\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricDescription\"},\"BusinessMetricAlgorithm\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricAlgorithm\"},\"BusinessMetricTypeId\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricTypeId\"},\"KeyPerformanceIndicator\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"KeyPerformanceIndicator\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"BusinessMetric\",\"path\":\"BusinessMetric.cdm.json/BusinessMetric\"},\"description\":\"A financial or performance metric or measurement that provides information about the performance or financial status of the organization, corporation or business unit.\",\"primaryKey\":[\"BusinessMetricId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a business metric.\",\"isNullable\":false,\"name\":\"BusinessMetricId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricName\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The name of a Business Metric.\",\"isNullable\":true,\"name\":\"BusinessMetricName\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricDescription\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The description of a Business Metric.\",\"isNullable\":true,\"name\":\"BusinessMetricDescription\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricAlgorithm\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The algorithm used to calculate a Business Metric.\",\"isNullable\":true,\"name\":\"BusinessMetricAlgorithm\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"BusinessMetricTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Business Metric Type.\",\"isNullable\":true,\"name\":\"BusinessMetricTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"name\":\"KeyPerformanceIndicator\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"Indicates whether the metric is always considered to be a key performance indicator.\",\"isNullable\":true,\"name\":\"KeyPerformanceIndicator\"}]}}}",
+								"Description": "A financial or performance metric or measurement that provides information about the performance or financial status of the organization, corporation or business unit.",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "BusinessMetricId",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "BusinessMetricType",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "Business ratios are categorized into 6 categories:\n\n- Sales Ratios\n- Profit Ratios\n- Debt & Capital Ratios\n- Efficiency Ratios\n- Marketing Ratios\n- Investment Ratios",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "BusinessMetricTypeId",
+										"Description": "The unique identifier of a Business Metric Type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetricType.cdm.json/BusinessMetricType",
+											"Name": "BusinessMetricTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricTypeName",
+										"Description": "The name of a Business Metric Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetricType.cdm.json/BusinessMetricType",
+											"Name": "BusinessMetricTypeName"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricTypeDescription",
+										"Description": "The description of a Business Metric Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "BusinessMetricType.cdm.json/BusinessMetricType",
+											"Name": "BusinessMetricTypeDescription"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BusinessMetricType",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/BusinessMetricType",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"BusinessMetricTypeId\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeId\"},\"BusinessMetricTypeName\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeName\"},\"BusinessMetricTypeDescription\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeDescription\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"BusinessMetricType\",\"path\":\"BusinessMetricType.cdm.json/BusinessMetricType\"},\"description\":\"Business ratios are categorized into 6 categories:\\n\\n- Sales Ratios\\n- Profit Ratios\\n- Debt & Capital Ratios\\n- Efficiency Ratios\\n- Marketing Ratios\\n- Investment Ratios\",\"primaryKey\":[\"BusinessMetricTypeId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Business Metric Type.\",\"isNullable\":false,\"name\":\"BusinessMetricTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeName\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The name of a Business Metric Type.\",\"isNullable\":true,\"name\":\"BusinessMetricTypeName\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"name\":\"BusinessMetricTypeDescription\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The description of a Business Metric Type.\",\"isNullable\":true,\"name\":\"BusinessMetricTypeDescription\"}]}}}",
+								"Description": "Business ratios are categorized into 6 categories:\n\n- Sales Ratios\n- Profit Ratios\n- Debt & Capital Ratios\n- Efficiency Ratios\n- Marketing Ratios\n- Investment Ratios",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "BusinessMetricTypeId",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "CharacteristicType",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "A type of characteristic associated with an individual.\n\nEx:\n- Special seating required\n- Special dietary requirement\n- Hard of hearing\n- Visual impairment\n- Life-threatening allergy(s)\n- Non-life-threatening allergy(s)\n- Cardia Health Issues\n- Diplomatic Person\n- Do Not Fly (US)\n- Exit Row Qualified\n- Number Of Children\n- Favorite Color",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "CharacteristicTypeId",
+										"Description": "The unique identifier of a characteristic type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "CharacteristicType.cdm.json/CharacteristicType",
+											"Name": "CharacteristicTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "CharacteristicTypeName",
+										"Description": "The name of a characteristic type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "CharacteristicType.cdm.json/CharacteristicType",
+											"Name": "CharacteristicTypeName"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "CharacteristicTypeDescription",
+										"Description": "The description of a characteristic type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "CharacteristicType.cdm.json/CharacteristicType",
+											"Name": "CharacteristicTypeDescription"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/CharacteristicType",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/CharacteristicType",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"CharacteristicTypeId\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeId\"},\"CharacteristicTypeName\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeName\"},\"CharacteristicTypeDescription\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeDescription\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"CharacteristicType\",\"path\":\"CharacteristicType.cdm.json/CharacteristicType\"},\"description\":\"A type of characteristic associated with an individual.\\n\\nEx:\\n- Special seating required\\n- Special dietary requirement\\n- Hard of hearing\\n- Visual impairment\\n- Life-threatening allergy(s)\\n- Non-life-threatening allergy(s)\\n- Cardia Health Issues\\n- Diplomatic Person\\n- Do Not Fly (US)\\n- Exit Row Qualified\\n- Number Of Children\\n- Favorite Color\",\"primaryKey\":[\"CharacteristicTypeId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a characteristic type.\",\"isNullable\":false,\"name\":\"CharacteristicTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeName\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The name of a characteristic type.\",\"isNullable\":true,\"name\":\"CharacteristicTypeName\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"CharacteristicType.cdm.json/CharacteristicType\",\"name\":\"CharacteristicTypeDescription\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The description of a characteristic type.\",\"isNullable\":true,\"name\":\"CharacteristicTypeDescription\"}]}}}",
+								"Description": "A type of characteristic associated with an individual.\n\nEx:\n- Special seating required\n- Special dietary requirement\n- Hard of hearing\n- Visual impairment\n- Life-threatening allergy(s)\n- Non-life-threatening allergy(s)\n- Cardia Health Issues\n- Diplomatic Person\n- Do Not Fly (US)\n- Exit Row Qualified\n- Number Of Children\n- Favorite Color",
+								"DisplayFolderInfo": "{\"name\":\"Customer\",\"colorCode\":\"#E3008C\"}",
+								"PrimaryKeys": "CharacteristicTypeId",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "LegalEntityBusinessMetric",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "The associated Business Metric reported by the Legal Entity for the indicated period.",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "LegalEntityId",
+										"Description": "The unique identifier of a Legal Entity.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "LegalEntityId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricId",
+										"Description": "The unique identifier of a business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "BusinessMetricId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodStartDate",
+										"Description": "The period start date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "PeriodStartDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodEndDate",
+										"Description": "The period end date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "PeriodEndDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricTargetValue",
+										"Description": "The target value of the legal entity business metric for the indicated period.",
+										"OriginDataTypeName": {
+											"TypeName": "decimal",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Precision": 18,
+											"Scale": 2,
+											"Properties": {
+												"HIVE_TYPE_STRING": "decimal"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "LegalEntityBusinessMetricTargetValue"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricValue",
+										"Description": "The value of the legal entity business metric calculated for the indicated period.",
+										"OriginDataTypeName": {
+											"TypeName": "decimal",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Precision": 18,
+											"Scale": 2,
+											"Properties": {
+												"HIVE_TYPE_STRING": "decimal"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "LegalEntityBusinessMetricValue"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricNote",
+										"Description": "A note, comment or additional information regarding the legal entity business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "LegalEntityBusinessMetricNote"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "IsoCurrencyCode",
+										"Description": "The ISO 4217 currency code.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 3,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "IsoCurrencyCode"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "KeyPerformanceIndicator",
+										"Description": "Indicates whether the metric is considered to be a key performance indicator during the given timeframe.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric",
+											"Name": "KeyPerformanceIndicator"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetric",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetric",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"LegalEntityId\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityId\"},\"BusinessMetricId\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"BusinessMetricId\"},\"PeriodStartDate\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"PeriodStartDate\"},\"PeriodEndDate\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"PeriodEndDate\"},\"LegalEntityBusinessMetricTargetValue\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricTargetValue\"},\"LegalEntityBusinessMetricValue\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricValue\"},\"LegalEntityBusinessMetricNote\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricNote\"},\"IsoCurrencyCode\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"IsoCurrencyCode\"},\"KeyPerformanceIndicator\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"KeyPerformanceIndicator\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"LegalEntityBusinessMetric\",\"path\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\"},\"description\":\"The associated Business Metric reported by the Legal Entity for the indicated period.\",\"primaryKey\":[\"LegalEntityId\",\"BusinessMetricId\",\"PeriodStartDate\",\"PeriodEndDate\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Legal Entity.\",\"isNullable\":false,\"name\":\"LegalEntityId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"BusinessMetricId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a business metric.\",\"isNullable\":false,\"name\":\"BusinessMetricId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"PeriodStartDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period start date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodStartDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"PeriodEndDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period end date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodEndDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricTargetValue\"},\"dataType\":\"decimal\",\"dataTypeLength\":18,\"description\":\"The target value of the legal entity business metric for the indicated period.\",\"isNullable\":true,\"scale\":2,\"name\":\"LegalEntityBusinessMetricTargetValue\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricValue\"},\"dataType\":\"decimal\",\"dataTypeLength\":18,\"description\":\"The value of the legal entity business metric calculated for the indicated period.\",\"isNullable\":true,\"scale\":2,\"name\":\"LegalEntityBusinessMetricValue\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"LegalEntityBusinessMetricNote\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"A note, comment or additional information regarding the legal entity business metric.\",\"isNullable\":true,\"name\":\"LegalEntityBusinessMetricNote\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"IsoCurrencyCode\"},\"dataType\":\"string\",\"dataTypeLength\":3,\"description\":\"The ISO 4217 currency code.\",\"isNullable\":true,\"name\":\"IsoCurrencyCode\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"name\":\"KeyPerformanceIndicator\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"Indicates whether the metric is considered to be a key performance indicator during the given timeframe.\",\"isNullable\":true,\"name\":\"KeyPerformanceIndicator\"}]}}}",
+								"Description": "The associated Business Metric reported by the Legal Entity for the indicated period.",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "LegalEntityId,BusinessMetricId,PeriodStartDate,PeriodEndDate",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "LegalEntityBusinessMetricPartyRelationshipType",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "The type of role or competency of an individual desired or required to perform or not perform the action.\n\nhttp://hl7.org/fhir/ValueSet/provenance-agent-role\n\nEnterer:  A person entering the data into the originating system\nPerformer:  A person, animal, organization or device that who actually and principally carries out the activity\nAuthor:  A party that originates the resource and therefore has responsibility for the information given in the resource and ownership of this resource\nVerifier:  A person who verifies the correctness and appropriateness of activity\nLegal Authenticator:  The person authenticated the content and accepted legal responsibility for its content\nAttester:  A verifier who attests to the accuracy of the resource\nInformant:  A person who reported information that contributed to the resource\nCustodian:  The entity that is accountable for maintaining a true an accurate copy of the original record\nAssembler:  A device that operates independently of an author on custodian's algorithms for data extraction of existing information for purpose of generating a new artifact.\nComposer:  A device used by an author to record new information, which may also be used by the author to select existing information for aggregation with newly recorded information for the purpose of generating a new artifact.",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "LegalEntityBusinessMetricPartyRelationshipTypeId",
+										"Description": "The unique identifier of a Legal Entity Business Metric Party Relationship Type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType",
+											"Name": "LegalEntityBusinessMetricPartyRelationshipTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricPartyRelationshipTypeName",
+										"Description": "The name of a Legal Entity Business Metric Party Relationship Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 256,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType",
+											"Name": "LegalEntityBusinessMetricPartyRelationshipTypeName"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricPartyRelationshipTypeDescription",
+										"Description": "The description of a Legal Entity Business Metric Party Relationship Type.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType",
+											"Name": "LegalEntityBusinessMetricPartyRelationshipTypeDescription"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetricPartyRelationshipType",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetricPartyRelationshipType",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"LegalEntityBusinessMetricPartyRelationshipTypeId\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},\"LegalEntityBusinessMetricPartyRelationshipTypeName\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeName\"},\"LegalEntityBusinessMetricPartyRelationshipTypeDescription\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeDescription\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"LegalEntityBusinessMetricPartyRelationshipType\",\"path\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\"},\"description\":\"The type of role or competency of an individual desired or required to perform or not perform the action.\\n\\nhttp://hl7.org/fhir/ValueSet/provenance-agent-role\\n\\nEnterer:  A person entering the data into the originating system\\nPerformer:  A person, animal, organization or device that who actually and principally carries out the activity\\nAuthor:  A party that originates the resource and therefore has responsibility for the information given in the resource and ownership of this resource\\nVerifier:  A person who verifies the correctness and appropriateness of activity\\nLegal Authenticator:  The person authenticated the content and accepted legal responsibility for its content\\nAttester:  A verifier who attests to the accuracy of the resource\\nInformant:  A person who reported information that contributed to the resource\\nCustodian:  The entity that is accountable for maintaining a true an accurate copy of the original record\\nAssembler:  A device that operates independently of an author on custodian's algorithms for data extraction of existing information for purpose of generating a new artifact.\\nComposer:  A device used by an author to record new information, which may also be used by the author to select existing information for aggregation with newly recorded information for the purpose of generating a new artifact.\",\"primaryKey\":[\"LegalEntityBusinessMetricPartyRelationshipTypeId\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Legal Entity Business Metric Party Relationship Type.\",\"isNullable\":false,\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeName\"},\"dataType\":\"string\",\"dataTypeLength\":256,\"description\":\"The name of a Legal Entity Business Metric Party Relationship Type.\",\"isNullable\":true,\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeName\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeDescription\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"The description of a Legal Entity Business Metric Party Relationship Type.\",\"isNullable\":true,\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeDescription\"}]}}}",
+								"Description": "The type of role or competency of an individual desired or required to perform or not perform the action.\n\nhttp://hl7.org/fhir/ValueSet/provenance-agent-role\n\nEnterer:  A person entering the data into the originating system\nPerformer:  A person, animal, organization or device that who actually and principally carries out the activity\nAuthor:  A party that originates the resource and therefore has responsibility for the information given in the resource and ownership of this resource\nVerifier:  A person who verifies the correctness and appropriateness of activity\nLegal Authenticator:  The person authenticated the content and accepted legal responsibility for its content\nAttester:  A verifier who attests to the accuracy of the resource\nInformant:  A person who reported information that contributed to the resource\nCustodian:  The entity that is accountable for maintaining a true an accurate copy of the original record\nAssembler:  A device that operates independently of an author on custodian's algorithms for data extraction of existing information for purpose of generating a new artifact.\nComposer:  A device used by an author to record new information, which may also be used by the author to select existing information for aggregation with newly recorded information for the purpose of generating a new artifact.",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "LegalEntityBusinessMetricPartyRelationshipTypeId",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "LegalEntityBusinessMetricRelatedParty",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "A party to a Contract Action",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "LegalEntityId",
+										"Description": "The unique identifier of a Legal Entity.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "LegalEntityId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricId",
+										"Description": "The unique identifier of a business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "BusinessMetricId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodStartDate",
+										"Description": "The period start date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "PeriodStartDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodEndDate",
+										"Description": "The period end date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "PeriodEndDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricPartyRelationshipTypeId",
+										"Description": "The unique identifier of a Legal Entity Business Metric Party Relationship Type.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "LegalEntityBusinessMetricPartyRelationshipTypeId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "RelatedPartyId",
+										"Description": "The unique identifier of a Party.",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "RelatedPartyId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodStartTimestamp",
+										"Description": "The period start timestamp.",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "PeriodStartTimestamp"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodEndTimestamp",
+										"Description": "The period end timestamp.",
+										"OriginDataTypeName": {
+											"TypeName": "timestamp",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Properties": {
+												"TimestampFormat": "YYYY-MM-DD HH:MM:SS.fffffffff",
+												"HIVE_TYPE_STRING": "timestamp"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "PeriodEndTimestamp"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "LegalEntityBusinessMetricPartyRelationshipNote",
+										"Description": "A note, comment or additional information regarding the Legal Entity Business Metric Related Party.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty",
+											"Name": "LegalEntityBusinessMetricPartyRelationshipNote"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetricRelatedParty",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/LegalEntityBusinessMetricRelatedParty",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"LegalEntityId\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityId\"},\"BusinessMetricId\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"BusinessMetricId\"},\"PeriodStartDate\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodStartDate\"},\"PeriodEndDate\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodEndDate\"},\"LegalEntityBusinessMetricPartyRelationshipTypeId\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},\"RelatedPartyId\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"RelatedPartyId\"},\"PeriodStartTimestamp\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodStartTimestamp\"},\"PeriodEndTimestamp\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodEndTimestamp\"},\"LegalEntityBusinessMetricPartyRelationshipNote\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipNote\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"LegalEntityBusinessMetricRelatedParty\",\"path\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\"},\"description\":\"A party to a Contract Action\",\"primaryKey\":[\"LegalEntityId\",\"BusinessMetricId\",\"PeriodStartDate\",\"PeriodEndDate\",\"LegalEntityBusinessMetricPartyRelationshipTypeId\",\"RelatedPartyId\",\"PeriodStartTimestamp\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Legal Entity.\",\"isNullable\":false,\"name\":\"LegalEntityId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"BusinessMetricId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a business metric.\",\"isNullable\":false,\"name\":\"BusinessMetricId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodStartDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period start date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodStartDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodEndDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period end date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodEndDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a Legal Entity Business Metric Party Relationship Type.\",\"isNullable\":false,\"name\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"RelatedPartyId\"},\"dataType\":\"long\",\"description\":\"The unique identifier of a Party.\",\"isNullable\":false,\"name\":\"RelatedPartyId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodStartTimestamp\"},\"dataType\":\"timestamp\",\"description\":\"The period start timestamp.\",\"isNullable\":false,\"name\":\"PeriodStartTimestamp\",\"timestampFormat\":\"YYYY-MM-DD HH:MM:SS.fffffffff\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"PeriodEndTimestamp\"},\"dataType\":\"timestamp\",\"description\":\"The period end timestamp.\",\"isNullable\":true,\"name\":\"PeriodEndTimestamp\",\"timestampFormat\":\"YYYY-MM-DD HH:MM:SS.fffffffff\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"name\":\"LegalEntityBusinessMetricPartyRelationshipNote\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"A note, comment or additional information regarding the Legal Entity Business Metric Related Party.\",\"isNullable\":true,\"name\":\"LegalEntityBusinessMetricPartyRelationshipNote\"}]}}}",
+								"Description": "A party to a Contract Action",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "LegalEntityId,BusinessMetricId,PeriodStartDate,PeriodEndDate,LegalEntityBusinessMetricPartyRelationshipTypeId,RelatedPartyId,PeriodStartTimestamp",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "PartyBusinessMetric",
+							"EntityType": "TABLE",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Description": "The associated Business Metric reported by the Party for the indicated period.",
+							"TableType": "EXTERNAL",
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"StorageDescriptor": {
+								"Columns": [
+									{
+										"Name": "PartyId",
+										"Description": "The unique identifier of a Party.",
+										"OriginDataTypeName": {
+											"TypeName": "long",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "long"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PartyId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "BusinessMetricId",
+										"Description": "The unique identifier of a business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "integer",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"HIVE_TYPE_STRING": "integer"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "BusinessMetricId"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodStartDate",
+										"Description": "The period start date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PeriodStartDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PeriodEndDate",
+										"Description": "The period end date for which the associated metric is calculated.",
+										"OriginDataTypeName": {
+											"TypeName": "date",
+											"IsComplexType": false,
+											"IsNullable": false,
+											"Properties": {
+												"DateFormat": "YYYY-MM-DD",
+												"HIVE_TYPE_STRING": "date"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PeriodEndDate"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PartyBusinessMetricTargetValue",
+										"Description": "The target value of the party business metric for the indicated period.",
+										"OriginDataTypeName": {
+											"TypeName": "decimal",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Precision": 18,
+											"Scale": 2,
+											"Properties": {
+												"HIVE_TYPE_STRING": "decimal"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PartyBusinessMetricTargetValue"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PartyBusinessMetricValue",
+										"Description": "The value of the business metric calculated for the indicated period.",
+										"OriginDataTypeName": {
+											"TypeName": "decimal",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Precision": 18,
+											"Scale": 2,
+											"Properties": {
+												"HIVE_TYPE_STRING": "decimal"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PartyBusinessMetricValue"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "PartyBusinessMetricNote",
+										"Description": "A note, comment or additional information regarding the party business metric.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "PartyBusinessMetricNote"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "IsoCurrencyCode",
+										"Description": "The ISO 4217 currency code.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 3,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "IsoCurrencyCode"
+										},
+										"DeltaFormatInvalidMessages": []
+									},
+									{
+										"Name": "KeyPerformanceIndicator",
+										"Description": "Indicates whether the metric is considered to be a key performance indicator during the given timeframe.",
+										"OriginDataTypeName": {
+											"TypeName": "string",
+											"IsComplexType": false,
+											"IsNullable": true,
+											"Length": 2048,
+											"Properties": {
+												"HIVE_TYPE_STRING": "string"
+											}
+										},
+										"BaseAttributeReference": {
+											"Entity": "PartyBusinessMetric.cdm.json/PartyBusinessMetric",
+											"Name": "KeyPerformanceIndicator"
+										},
+										"DeltaFormatInvalidMessages": []
+									}
+								],
+								"Format": {
+									"InputFormat": "org.apache.hadoop.mapred.SequenceFileInputFormat",
+									"OutputFormat": "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+									"FormatType": "csv",
+									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+									"Properties": {
+										"path": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/PartyBusinessMetric",
+										"delimiter": ",",
+										"multiLine": "false",
+										"firstRowAsHeader": "false",
+										"serialization.format": "1",
+										"escape": "\\",
+										"quote": "\"",
+										"FormatTypeSetToDatabaseDefault": true,
+										"header": "false"
+									}
+								},
+								"Source": {
+									"Provider": "ADLS",
+									"Location": "abfss://nycpayroll@adlsasawsudacity.dfs.core.windows.net/Database1/PartyBusinessMetric",
+									"Properties": {
+										"LinkedServiceName": "asaws-udacity-WorkspaceDefaultStorage",
+										"LocationSetToDatabaseDefault": true
+									}
+								},
+								"Properties": {
+									"textinputformat.record.delimiter": ",",
+									"compression": "{\"type\":\"None\",\"level\":\"optimal\"}",
+									"derivedModelAttributeInfo": "{\"attributeReferences\":{\"PartyId\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyId\"},\"BusinessMetricId\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"BusinessMetricId\"},\"PeriodStartDate\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PeriodStartDate\"},\"PeriodEndDate\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PeriodEndDate\"},\"PartyBusinessMetricTargetValue\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricTargetValue\"},\"PartyBusinessMetricValue\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricValue\"},\"PartyBusinessMetricNote\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricNote\"},\"IsoCurrencyCode\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"IsoCurrencyCode\"},\"KeyPerformanceIndicator\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"KeyPerformanceIndicator\"}}}"
+								},
+								"Compressed": false,
+								"IsStoredAsSubdirectories": false
+							},
+							"Properties": {
+								"DerivedModelEntityInfo": "{\"entityDirectives\":{\"baseEntityReference\":{\"name\":\"PartyBusinessMetric\",\"path\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\"},\"description\":\"The associated Business Metric reported by the Party for the indicated period.\",\"primaryKey\":[\"PartyId\",\"BusinessMetricId\",\"PeriodStartDate\",\"PeriodEndDate\"],\"projectionInfo\":{\"attributes\":[{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyId\"},\"dataType\":\"long\",\"description\":\"The unique identifier of a Party.\",\"isNullable\":false,\"name\":\"PartyId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"BusinessMetricId\"},\"dataType\":\"integer\",\"description\":\"The unique identifier of a business metric.\",\"isNullable\":false,\"name\":\"BusinessMetricId\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PeriodStartDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period start date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodStartDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PeriodEndDate\"},\"dataType\":\"date\",\"dateFormat\":\"YYYY-MM-DD\",\"description\":\"The period end date for which the associated metric is calculated.\",\"isNullable\":false,\"name\":\"PeriodEndDate\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricTargetValue\"},\"dataType\":\"decimal\",\"dataTypeLength\":18,\"description\":\"The target value of the party business metric for the indicated period.\",\"isNullable\":true,\"scale\":2,\"name\":\"PartyBusinessMetricTargetValue\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricValue\"},\"dataType\":\"decimal\",\"dataTypeLength\":18,\"description\":\"The value of the business metric calculated for the indicated period.\",\"isNullable\":true,\"scale\":2,\"name\":\"PartyBusinessMetricValue\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"PartyBusinessMetricNote\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"A note, comment or additional information regarding the party business metric.\",\"isNullable\":true,\"name\":\"PartyBusinessMetricNote\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"IsoCurrencyCode\"},\"dataType\":\"string\",\"dataTypeLength\":3,\"description\":\"The ISO 4217 currency code.\",\"isNullable\":true,\"name\":\"IsoCurrencyCode\"},{\"type\":\"Existing\",\"attributeReference\":{\"entity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"name\":\"KeyPerformanceIndicator\"},\"dataType\":\"string\",\"dataTypeLength\":2048,\"description\":\"Indicates whether the metric is considered to be a key performance indicator during the given timeframe.\",\"isNullable\":true,\"name\":\"KeyPerformanceIndicator\"}]}}}",
+								"Description": "The associated Business Metric reported by the Party for the indicated period.",
+								"DisplayFolderInfo": "{\"name\":\"Business Metrics\",\"colorCode\":\"#00A2AD\"}",
+								"PrimaryKeys": "PartyId,BusinessMetricId,PeriodStartDate,PeriodEndDate",
+								"spark.sql.sources.provider": "csv"
+							},
+							"Retention": 0,
+							"Temporary": false,
+							"IsRewriteEnabled": false
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-fgqfitlraw",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "BusinessMetricType",
+							"ToTableName": "BusinessMetric",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "BusinessMetricTypeId",
+									"ToColumnName": "BusinessMetricTypeId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"BusinessMetricType.cdm.json/BusinessMetricType\",\"toEntity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"joinPairs\":[{\"fromAttribute\":\"BusinessMetricTypeId\",\"toAttribute\":\"BusinessMetricTypeId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-lizzrucpqr",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "BusinessMetric",
+							"ToTableName": "PartyBusinessMetric",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "BusinessMetricId",
+									"ToColumnName": "BusinessMetricId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"toEntity\":\"PartyBusinessMetric.cdm.json/PartyBusinessMetric\",\"joinPairs\":[{\"fromAttribute\":\"BusinessMetricId\",\"toAttribute\":\"BusinessMetricId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-psfmbykeke",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "LegalEntityBusinessMetric",
+							"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "PeriodEndDate",
+									"ToColumnName": "PeriodEndDate"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"PeriodEndDate\",\"toAttribute\":\"PeriodEndDate\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-puugoyuulm",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "LegalEntityBusinessMetric",
+							"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "LegalEntityId",
+									"ToColumnName": "LegalEntityId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"LegalEntityId\",\"toAttribute\":\"LegalEntityId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-qopznxyvrn",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "BusinessMetric",
+							"ToTableName": "LegalEntityBusinessMetric",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "BusinessMetricId",
+									"ToColumnName": "BusinessMetricId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"BusinessMetric.cdm.json/BusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"joinPairs\":[{\"fromAttribute\":\"BusinessMetricId\",\"toAttribute\":\"BusinessMetricId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-tmlyfbsghy",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "LegalEntityBusinessMetric",
+							"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "PeriodStartDate",
+									"ToColumnName": "PeriodStartDate"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"PeriodStartDate\",\"toAttribute\":\"PeriodStartDate\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-ufvomwozke",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "LegalEntityBusinessMetric",
+							"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "BusinessMetricId",
+									"ToColumnName": "BusinessMetricId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetric.cdm.json/LegalEntityBusinessMetric\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"BusinessMetricId\",\"toAttribute\":\"BusinessMetricId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					},
+					{
+						"ActionType": "CREATE",
+						"OldEntity": null,
+						"NewEntity": {
+							"Name": "relationship-uqwthhfjlg",
+							"EntityType": "RELATIONSHIP",
+							"Namespace": {
+								"DatabaseName": "Database1"
+							},
+							"Origin": {
+								"Type": "SPARK"
+							},
+							"FromTableName": "LegalEntityBusinessMetricPartyRelationshipType",
+							"ToTableName": "LegalEntityBusinessMetricRelatedParty",
+							"ColumnRelationshipInformations": [
+								{
+									"FromColumnName": "LegalEntityBusinessMetricPartyRelationshipTypeId",
+									"ToColumnName": "LegalEntityBusinessMetricPartyRelationshipTypeId"
+								}
+							],
+							"RelationshipType": 0,
+							"Properties": {
+								"DerivedModelRelationshipInfo": "{\"baseRelationship\":{\"fromEntity\":\"LegalEntityBusinessMetricPartyRelationshipType.cdm.json/LegalEntityBusinessMetricPartyRelationshipType\",\"toEntity\":\"LegalEntityBusinessMetricRelatedParty.cdm.json/LegalEntityBusinessMetricRelatedParty\",\"joinPairs\":[{\"fromAttribute\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\",\"toAttribute\":\"LegalEntityBusinessMetricPartyRelationshipTypeId\"}]}}"
+							}
+						},
+						"Source": {
+							"Type": "SPARK"
+						}
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}
